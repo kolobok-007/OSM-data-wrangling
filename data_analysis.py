@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Jun 09 16:20:58 2016
 
-@author: Mikhail
-"""
 import pprint
 def get_db(db_name):
     from pymongo import MongoClient
@@ -12,13 +8,33 @@ def get_db(db_name):
     return db
 
 def make_pipeline():
-    # complete the aggregation pipeline
+    """ each ofthe following pipelines answers a specific question"""
+
+    # What are the top 10 amenities?
     pipeline = [{'$match':{'created.user':{'$exists':True}}},
                 {'$group':{'_id':'$created.user',
                            'count':{'$sum':1}}},
                 {'$sort':{'count':-1}},
                 {'$limit':10}
                ]
+
+    # What type of restaurants are the most popular?
+    pipeline2 = [{'$match':{'cuisine':{'$exists':True}}},
+                {'$group':{'_id':'$cuisine',
+                           'count':{'$sum':1}}},
+                {'$sort':{'count':-1}},
+                {'$limit':10}
+             ]
+    
+    # Who are the most prolific users?
+    pipeline3 = [{'$match':{'created.user':{'$exists':True}}},
+                {'$group':{'_id':'$created.user',
+                           'count':{'$sum':1}}},
+                {'$sort':{'count':-1}},
+                {'$limit':10}
+               ]
+
+    # subsitute different pipeline versions depending on the question being asked
     return pipeline
 
 db = get_db('osm_waterloo')
